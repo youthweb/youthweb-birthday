@@ -1,0 +1,23 @@
+{
+    "name": "art4/youthweb-event",
+    "type": "library",
+    "description": "Youthweb Event Website",
+    "homepage": "https://github.com/Art4/youthweb-event",
+    "keywords": ["youthweb", "api", "event"],
+    "license": "GPL3",
+    "authors": [
+        {
+            "name": "Artur Weigandt",
+            "email": "art4@youthweb.net",
+            "homepage": "https://wlabs.de"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Art4\\YouthwebEvent\\": "src"
+        }
+    }
+}
