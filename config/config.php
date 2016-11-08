@@ -14,8 +14,11 @@ return [
 		],
 		'views' => [
 			'twig' => [
-				'cache_path' => ROOTPATH.'cache/twig/',
 				'template_path' => ROOTPATH.'templates/',
+				'environment' => [
+					'auto_reload' => true,
+					'cache_path' => ROOTPATH.'cache/twig/',
+				],
 			],
 		],
 	],

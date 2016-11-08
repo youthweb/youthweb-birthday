@@ -1,4 +1,6 @@
-composer.phar
-composer.lock
 cache/
+node_modules/
+public/assets/css/
 vendor/
+composer.lock
+composer.phar

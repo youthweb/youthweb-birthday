@@ -7,7 +7,6 @@ require '../vendor/autoload.php';
 
 define('PUBLICPATH', __DIR__.DIRECTORY_SEPARATOR);
 define('ROOTPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
-define('');
 
 $config_path = ROOTPATH . 'config';
 $env = getenv('SLIM_ENV') ?: 'development';
@@ -21,9 +20,10 @@ $container = $app->getContainer();
 // Register component on container
 $container['view'] = function ($container)
 {
-	$view = new \Slim\Views\Twig($container['settings']['views']['twig']['template_path'], [
-		'cache' => $container['settings']['views']['twig']['cache_path'],
-	]);
+	$view = new \Slim\Views\Twig(
+		$container['settings']['views']['twig']['template_path'],
+		$container['settings']['views']['twig']['environment']
+	);
 
 	// Instantiate and add Slim specific extension
 	$basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');

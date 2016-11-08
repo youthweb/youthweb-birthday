@@ -1,0 +1,13 @@
+{
+  "name": "youthweb-event",
+  "version": "0.1.0",
+  "dependencies": {
+    "bootstrap": "^4.0.0-alpha.5",
+    "grunt": "^1.0.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-concat": "^1.0.0"
+  },
+  "scripts": {
+    "grunt": "grunt default"
+  }
+}
