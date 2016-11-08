@@ -36,8 +36,6 @@ class Config
 			$env_config = require($env_config_path);
 		}
 
-		$config = array_merge($base_config, $env_config);
-
-		return $config;
+		return array_replace_recursive($base_config, $env_config);
 	}
 }
