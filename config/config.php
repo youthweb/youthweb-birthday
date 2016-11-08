@@ -9,9 +9,14 @@ return [
 		'displayErrorDetails' => false,
 		'addContentLengthHeader' => true,
 		'routerCacheFile' => false,
+		'database' => [
+			'type' => 'sqlite',
+		],
+		'views' => [
+			'twig' => [
+				'cache_path' => ROOTPATH.'cache/twig/',
+				'template_path' => ROOTPATH.'templates/',
+			],
+		],
 	],
-	'db' => [
-		'type' => 'sqlite',
-	],
-	'my' => 'config',
 ];

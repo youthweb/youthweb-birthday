@@ -5,16 +5,36 @@ use Psr\Http\Message\ResponseInterface;
 
 require '../vendor/autoload.php';
 
-$config_path = __DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'config';
+define('PUBLICPATH', __DIR__.DIRECTORY_SEPARATOR);
+define('ROOTPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
+define('');
+
+$config_path = ROOTPATH . 'config';
 $env = getenv('SLIM_ENV') ?: 'development';
 
 $config = new Art4\YouthwebEvent\Config($config_path, $env);
 
 $app = new \Slim\App($config->getAll());
 
+$container = $app->getContainer();
+
+// Register component on container
+$container['view'] = function ($container)
+{
+	$view = new \Slim\Views\Twig($container['settings']['views']['twig']['template_path'], [
+		'cache' => $container['settings']['views']['twig']['cache_path'],
+	]);
+
+	// Instantiate and add Slim specific extension
+	$basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
+	$view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
+
+	return $view;
+};
+
 $app->get('/', function (ServerRequestInterface $request, ResponseInterface $response)
 {
-	$response->getBody()->write("Hello World!");
+	return $this->view->render($response, 'index.twig', []);
 
 	return $response;
 });
