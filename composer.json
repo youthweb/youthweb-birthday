@@ -1,6 +1,6 @@
 {
     "name": "art4/youthweb-event",
-    "type": "library",
+    "type": "project",
     "description": "Youthweb Event Website",
     "homepage": "https://github.com/Art4/youthweb-event",
     "keywords": ["youthweb", "api", "event"],
@@ -13,6 +13,7 @@
         }
     ],
     "require": {
+        "php": "^5.6 || ^7.0",
         "slim/slim": "^3.5",
         "slim/twig-view": "^2.1"
     },
