@@ -1,8 +1,5 @@
 <?php
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
 require '../vendor/autoload.php';
 
 define('PUBLICPATH', __DIR__.DIRECTORY_SEPARATOR);
@@ -32,19 +29,7 @@ $container['view'] = function ($container)
 	return $view;
 };
 
-$app->get('/', function (ServerRequestInterface $request, ResponseInterface $response)
-{
-	return $this->view->render($response, 'index.twig', []);
-
-	return $response;
-});
-
-$app->get('/hello/{name}', function (ServerRequestInterface $request, ResponseInterface $response)
-{
-	$name = $request->getAttribute('name');
-	$response->getBody()->write("Hello, $name");
-
-	return $response;
-});
+$app->get('/', '\Art4\YouthwebEvent\Controller:getIndex');
+$app->get('/hello/{name}', '\Art4\YouthwebEvent\Controller:getHelloName');
 
 $app->run();
