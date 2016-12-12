@@ -21,5 +21,13 @@ return [
 				],
 			],
 		],
+		'routes' => [
+			'/' => [
+				'GET' => '\Art4\YouthwebEvent\Controller:getIndex',
+			],
+			'/hello/{name}' => [
+				'GET' => '\Art4\YouthwebEvent\Controller:getHelloName',
+			],
+		],
 	],
 ];

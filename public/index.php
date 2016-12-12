@@ -29,7 +29,13 @@ $container['view'] = function ($container)
 	return $view;
 };
 
-$app->get('/', '\Art4\YouthwebEvent\Controller:getIndex');
-$app->get('/hello/{name}', '\Art4\YouthwebEvent\Controller:getHelloName');
+// Add routes to app
+foreach ($container['settings']['routes'] as $pattern => $target)
+{
+	foreach ($target as $method => $callable)
+	{
+		$app->map([$method], $pattern, $callable);
+	}
+}
 
 $app->run();
