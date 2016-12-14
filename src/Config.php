@@ -27,6 +27,7 @@ class Config
 		$base_config_path .= \DIRECTORY_SEPARATOR;
 
 		$base_config = require($base_config_path . 'config.php');
+		$base_config['settings']['environment'] = $this->env;
 
 		$env_config_path = $base_config_path . $this->env . \DIRECTORY_SEPARATOR . 'config.php';
 		$env_config = [];
