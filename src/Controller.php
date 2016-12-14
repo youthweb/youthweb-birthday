@@ -28,12 +28,72 @@ class Controller
 		return $response;
 	}
 
-	public function getHelloName(ServerRequestInterface $request, ResponseInterface $response, $args)
+	public function getJoin(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
-		$name = $request->getAttribute('name');
-		$response->getBody()->write("Hello, $name");
+		list($client, $request, $response) = $this->createClient($request, $response);
+
+		if ( ! $client->isAuthorized() )
+		{
+			$response = $response->withHeader('Location', $client->getAuthorizationUrl());
+
+			return $response;
+		}
+
+		$me = $client->getResource('users')->showMe();
+
+		$response->getBody()->write(sprintf('<p>Hallo %s %s!</p>', $me->get('data.attributes.first_name'), $me->get('data.attributes.last_name')));
 
 		return $response;
+	}
+
+	public function getAuth(ServerRequestInterface $request, ResponseInterface $response, $args)
+	{
+		list($client, $request, $response) = $this->createClient($request, $response);
+
+		$query = $request->getQueryParams();
+
+		$client->authorize('authorization_code', [
+			'code' => $query['code'] ?: '',
+			'state' => $query['state'] ?: '',
+		]);
+
+		$response = $response->withHeader('Location', '/join');
+
+		return $response;
+	}
+
+	/**
+	 * Create a Youthweb-API client
+	 *
+	 * @return Youthweb\Api\Client
+	 */
+	private function createClient(ServerRequestInterface $request, ResponseInterface $response)
+	{
+		$cookie_params = $request->getCookieParams();
+
+		if ( isset($cookie_params['accesskey']) and \Ramsey\Uuid\Uuid::isValid($cookie_params['accesskey']) )
+		{
+			$namespace = $cookie_params['accesskey'];
+		}
+		else
+		{
+			$namespace = strval(\Ramsey\Uuid\Uuid::uuid4());
+
+			$response = $this->addCookieToResponse($response, 'accesskey', $namespace, new \DateTime('+1 hour'));
+		}
+
+		$config = $this->container['settings']['youthweb_client'];
+
+		$config['cache_namespace'] = str_replace('-', '', $namespace) . '.';
+
+		$client = new \Youthweb\Api\Client(
+			$config,
+			[
+				'cache_provider' => $this->container['cachepool'],
+			]
+		);
+
+		return [$client, $request, $response];
 	}
 
 	/**

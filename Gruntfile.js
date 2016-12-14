@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
-						'node_modules/bootstrap/dist/css/bootstrap.min.css'
+					'node_modules/bootstrap/dist/css/bootstrap.min.css'
 				],
 				dest: 'public/assets/css/style.css'
 			}

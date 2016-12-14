@@ -12,21 +12,32 @@ return [
 		'database' => [
 			'type' => 'sqlite',
 		],
+		'youthweb_client' => [
+			'client_id'     => '{client_id}',
+			'client_secret' => '{client_secret}',
+			'redirect_url'  => 'http://localhost:8080/auth',
+		],
 		'views' => [
 			'twig' => [
-				'template_path' => ROOTPATH.'templates/',
+				'template_path' => ROOTPATH.'templates'.DS,
 				'environment' => [
-					'auto_reload' => true,
-					'cache_path' => ROOTPATH.'cache/twig/',
+					'auto_reload' => false,
+					'cache_path' => ROOTPATH.'cache'.DS.'twig'.DS,
 				],
 			],
+		],
+		'cachepool' => [
+			'cache_path' => ROOTPATH.'cache'.DS.'cachepool'.DS,
 		],
 		'routes' => [
 			'/' => [
 				'GET' => '\Art4\YouthwebEvent\Controller:getIndex',
 			],
-			'/hello/{name}' => [
-				'GET' => '\Art4\YouthwebEvent\Controller:getHelloName',
+			'/auth' => [
+				'GET' => '\Art4\YouthwebEvent\Controller:getAuth',
+			],
+			'/join' => [
+				'GET' => '\Art4\YouthwebEvent\Controller:getJoin',
 			],
 		],
 	],

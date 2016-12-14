@@ -1,6 +1,8 @@
 cache/
+composer.lock
+composer.phar
+config/development/
+config/production/
 node_modules/
 public/assets/css/
 vendor/
-composer.lock
-composer.phar
