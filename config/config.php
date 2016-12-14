@@ -25,7 +25,6 @@ return [
 				'charset'      => 'utf8mb4',
 				'collation'    => 'utf8mb4_unicode_ci',
 				'enable_cache' => true,
-				'profiling'    => false,
 			],
 			'doctrine2' => [
 				'proxy_dir'       => ROOTPATH.'cache'.DS.'doctrine2_proxies',

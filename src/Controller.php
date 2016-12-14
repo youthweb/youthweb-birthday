@@ -23,7 +23,13 @@ class Controller
 
 	public function getIndex(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
-		$this->container->view->render($response, 'index.twig', []);
+		$em = $this->container['em'];
+
+		$members = $em->getRepository(Model\MemberModel::class)->findAll();
+
+		$this->container->view->render($response, 'index.twig', [
+			'members_count' => count($members),
+		]);
 
 		return $response;
 	}
