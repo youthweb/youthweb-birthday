@@ -91,6 +91,7 @@ class Controller
 		$config = $this->container['settings']['youthweb_client'];
 
 		$config['cache_namespace'] = str_replace('-', '', $namespace) . '.';
+		$config['scope'] = ['user:read'];
 
 		$client = new \Youthweb\Api\Client(
 			$config,
