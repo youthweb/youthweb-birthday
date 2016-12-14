@@ -16,13 +16,13 @@ $container['cli'] = function ($container)
 
 	// Migrations Commands
 	$migration_commands = array(
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand(),
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\LatestCommand(),
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
-		new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand()
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand())->setName('doctrine:migrations:diff'),
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand())->setName('doctrine:migrations:execute'),
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand())->setName('doctrine:migrations:generate'),
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\LatestCommand())->setName('doctrine:migrations:latest'),
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand())->setName('doctrine:migrations:migrate'),
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand())->setName('doctrine:migrations:status'),
+		(new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand())->setName('doctrine:migrations:version'),
 	);
 
 	$settings = $container['settings']['database']['doctrine2']['migrations'];
