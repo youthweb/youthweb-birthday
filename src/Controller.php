@@ -45,7 +45,21 @@ class Controller
 			return $response;
 		}
 
-		$me = $client->getResource('users')->showMe();
+		try
+		{
+			$me = $client->getResource('users')->showMe();
+		}
+		catch (\Exception $e)
+		{
+			// Prüfen, ob ein 401 Error vorliegt
+			// @see https://github.com/youthweb/php-youthweb-api/issues/14
+			if ( strval($e->getCode()) === '401' )
+			{
+				return $this->showUnauthorizedError($request, $response, $args);
+			}
+
+			throw $e;
+		}
 
 		$response->getBody()->write(sprintf('<p>Hallo %s %s!</p>', $me->get('data.attributes.first_name'), $me->get('data.attributes.last_name')));
 
@@ -58,18 +72,35 @@ class Controller
 
 		$query = $request->getQueryParams();
 
-		$client->authorize('authorization_code', [
-			'code' => $query['code'] ?: '',
-			'state' => $query['state'] ?: '',
-		]);
+		try
+		{
+			$client->authorize('authorization_code', [
+				'code' => $query['code'] ?: '',
+				'state' => $query['state'] ?: '',
+			]);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			return $this->showUnauthorizedError($request, $response, $args);
+		}
 
 		$response = $response->withHeader('Location', '/join');
 
 		return $response;
 	}
 
+	private function showUnauthorizedError(ServerRequestInterface $request, ResponseInterface $response, $args)
+	{
+		$this->container->view->render($response, 'errors/unauthorized.twig', []);
+
+		return $response;
+	}
+
 	/**
 	 * Create a Youthweb-API client
+	 *
+	 * We can't put this into the container because of the cache_namespace creation
+	 * @see https://github.com/youthweb/php-youthweb-api/issues/15
 	 *
 	 * @return Youthweb\Api\Client
 	 */
