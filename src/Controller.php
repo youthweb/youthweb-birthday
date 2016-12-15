@@ -61,7 +61,30 @@ class Controller
 			throw $e;
 		}
 
-		$response->getBody()->write(sprintf('<p>Hallo %s %s!</p>', $me->get('data.attributes.first_name'), $me->get('data.attributes.last_name')));
+		$em = $this->container['em'];
+
+		$member = $em->getRepository(Model\MemberModel::class)->findOneBy([
+			'user_id' => $me->get('data.id')
+		]);
+
+		// Create new member
+		if ($member === null)
+		{
+			$member = new Model\MemberModel;
+			$member->setUserId($me->get('data.id'));
+			$member->setUsername($me->get('data.attributes.username'));
+			$member->setName($me->get('data.attributes.first_name') . ' ' . $me->get('data.attributes.last_name'));
+			$member->setMemberSince(new \DateTime($me->get('data.attributes.created_at')));
+			$member->setBirthday(new \DateTime($me->get('data.attributes.birthday')));
+			$member->setPictureUrl($me->get('data.attributes.picture_url'));
+			$member->setDescriptionMotto($me->get('data.attributes.description_motto'));
+			$member->setCreatedAt(time());
+
+			$em->persist($member);
+			$em->flush();
+		}
+
+		$response = $response->withHeader('Location', '/');
 
 		return $response;
 	}
