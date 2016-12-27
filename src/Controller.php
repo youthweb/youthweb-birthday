@@ -29,6 +29,40 @@ class Controller
 
 		$this->container->view->render($response, 'index.twig', [
 			'members_count' => count($members),
+			'members' => [
+				[
+					'message' => 'Lorem ipsum dolor sit amet, eu sit eius justo adipiscing, cum eros tempor epicurei ex. Ea tota perfecto sit. Illum epicuri eloquentiam ad vim, dignissim cotidieque ea sit, ut eam everti vivendum principes. Ut eius velit ignota usu, agam diceret consectetuer pro cu. An sit mollis mentitum consetetur, has sint liber officiis te. Eam no decore appetere democritum.',
+				],
+				[
+					'message' => 'Ex has nibh illud. Nobis doctus qui et. Ius nostro salutatus honestatis at, sit ignota verterem voluptatum cu. Usu impetus mediocrem ex, pro sale admodum ad.
+
+At mea nulla nullam timeam, cu deserunt vulputate vim. Per ut affert accumsan perfecto. Cibo mutat periculis ne qui, cu sea dico nonumes detraxit. Mel id putant moderatius, congue molestie an per. Te eam latine quaestio, at qui probo efficiantur, comprehensam vituperatoribus in eam.',
+				],
+				[
+					'message' => 'Lorem ipsum dolor sit amet, eu sit eius justo adipiscing, cum eros tempor epicurei ex. Ea tota perfecto sit. Illum epicuri eloquentiam ad vim, dignissim cotidieque ea sit, ut eam everti vivendum principes. Ut eius velit ignota usu, agam diceret consectetuer pro cu. An sit mollis mentitum consetetur, has sint liber officiis te. Eam no decore appetere democritum.',
+				],
+				[
+					'message' => 'Ex has nibh illud. Nobis doctus qui et. Ius nostro salutatus honestatis at, sit ignota verterem voluptatum cu. Usu impetus mediocrem ex, pro sale admodum ad.
+
+At mea nulla nullam timeam, cu deserunt vulputate vim. Per ut affert accumsan perfecto. Cibo mutat periculis ne qui, cu sea dico nonumes detraxit. Mel id putant moderatius, congue molestie an per. Te eam latine quaestio, at qui probo efficiantur, comprehensam vituperatoribus in eam.',
+				],
+				[
+					'message' => 'Ex has nibh illud. Nobis doctus qui et. Ius nostro salutatus honestatis at, sit ignota verterem voluptatum cu. Usu impetus mediocrem ex, pro sale admodum ad.
+
+At mea nulla nullam timeam, cu deserunt vulputate vim. Per ut affert accumsan perfecto. Cibo mutat periculis ne qui, cu sea dico nonumes detraxit. Mel id putant moderatius, congue molestie an per. Te eam latine quaestio, at qui probo efficiantur, comprehensam vituperatoribus in eam.',
+				],
+				[
+					'message' => 'Aeterno pericula pri in, ad sea voluptaria conclusionemque, ubique epicuri eos eu. In ludus adipisci consetetur nec. Pro vivendum patrioque mediocritatem te, eam ad nullam hendrerit. Eam no consequat percipitur, ne facilis consequuntur vis. Ei nulla facilis incorrupte nec, ex vix veritus prodesset. Per falli contentiones eu, accusam corpora has cu. Quot delectus salutandi ex vel.
+
+Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum voluptatum id, porro dicta vituperatoribus ea nec. Ex per novum tation concludaturque. Est suscipit periculis no. Vidit instructior ex vel, vel ei etiam aperiri.',
+				],
+				[
+					'message' => 'Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum voluptatum id, porro dicta vituperatoribus ea nec. Ex per novum tation concludaturque. Est suscipit periculis no. Vidit instructior ex vel, vel ei etiam aperiri.',
+				],
+				[
+					'message' => 'Lorem ipsum dolor sit amet, eu sit eius justo adipiscing, cum eros tempor epicurei ex. Ea tota perfecto sit. Illum epicuri eloquentiam ad vim, dignissim cotidieque ea sit, ut eam everti vivendum principes. Ut eius velit ignota usu, agam diceret consectetuer pro cu. An sit mollis mentitum consetetur, has sint liber officiis te. Eam no decore appetere democritum.',
+				],
+			],
 		]);
 
 		return $response;

@@ -20,7 +20,21 @@
 			<p class="text-xs-center text-sm-left"><a href="#">or sign up with Email</a></p>
 		</div>
 	</div>
-
+	<div class="container">
+		<div class="row">
+			<div class="card-columns">
+{% for member in members %}
+				<div class="card">
+					<img class="card-img-top img-fluid" src="http://placehold.it/150x150" alt="Card image cap" style="height: 100%; width: 100%; display: block;">
+					<div class="card-block">
+						<h4 class="card-title">Card title</h4>
+						<p class="card-text">{{ member.message }}</p>
+					</div>
+				</div>
+{% endfor %}
+			</div>
+		</div>
+	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4">
