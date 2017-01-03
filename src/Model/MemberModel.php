@@ -64,12 +64,6 @@ class MemberModel
 		]);
 
 		$metadata->mapField([
-			'fieldName' => 'birthday',
-			'columnName' => 'birthday',
-			'type' => 'date',
-		]);
-
-		$metadata->mapField([
 			'fieldName' => 'picture_url',
 			'columnName' => 'picture_url',
 			'type' => 'string',
@@ -124,13 +118,6 @@ class MemberModel
 	 * @var \DateTimeInterface
 	 */
 	private $member_since;
-
-	/**
-	 * Birthday
-	 *
-	 * @var \DateTimeInterface
-	 */
-	private $birthday;
 
 	/**
 	 * picture_url
@@ -255,30 +242,6 @@ class MemberModel
 	public function setMemberSince($member_since)
 	{
 		$this->member_since = $member_since;
-
-		return $this;
-	}
-
-	/**
-	 * Get the value of birthday
-	 *
-	 * @return \DateTimeInteface|null
-	 */
-	public function getBirthday()
-	{
-		return $this->birthday;
-	}
-
-	/**
-	 * Set the value of birthday
-	 *
-	 * @param \DateTimeInteface|null $birthday
-	 *
-	 * @return self
-	 */
-	public function setBirthday($birthday)
-	{
-		$this->birthday = $birthday;
 
 		return $this;
 	}

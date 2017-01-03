@@ -92,7 +92,6 @@ class Controller
 			$member->setUsername($me->get('data.attributes.username'));
 			$member->setName($me->get('data.attributes.first_name') . ' ' . $me->get('data.attributes.last_name'));
 			$member->setMemberSince(new \DateTime($me->get('data.attributes.created_at')));
-			$member->setBirthday(new \DateTime($me->get('data.attributes.birthday')));
 			$member->setPictureUrl($me->get('data.attributes.picture_url'));
 			$member->setDescriptionMotto($me->get('data.attributes.description_motto'));
 			$member->setCreatedAt(time());
