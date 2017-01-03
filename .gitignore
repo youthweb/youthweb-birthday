@@ -5,4 +5,5 @@ config/development/
 config/production/
 node_modules/
 public/assets/css/
+public/assets/fonts/
 vendor/

@@ -1,23 +1,38 @@
 {% extends 'layout.twig' %}
 
-{% block title %}Youthweb Event{% endblock %}
+{% block title %}Youthweb hat Geburtstag{% endblock %}
+
+{% block head %}
+
+{% endblock %}
 
 {% block body %}
+	<nav class="navbar navbar-light bg-faded">
+		<a class="navbar-brand" href="/">Home</a>
+{% if current_user_data %}
+		<span class="navbar-text float-xs-right">
+			Hallo {{ current_user_data.username }}
+			<a class="btn btn-outline-primary btn-sm" href="/logout" role="button">Logout</a>
+		</span>
+{% else %}
+		<span class="navbar-text float-xs-right">
+			<a class="btn btn-primary btn-sm" href="/join" role="button">Login mit Youthweb</a>
+		</span>
+{% endif %}
+	</nav>
 	<div class="jumbotron">
 		<div class="container">
-			<h1 class="display-4">Event Name</h1>
-			<p>This is a template for a simple event website. You can add all details in this page. Don't forget the date, time and the location. This can look like this.</p>
-			<p class="text-xs-center text-sm-left font-weight-bold">Monday, 12. December 2016, 15:00</p>
-			<address>
-				<strong>Location Name</strong><br>
-				Examplestreet 12<br>
-				12345 City<br>
-				Contact: mail@example.com
-			</address>
-			<p class="text-xs-center text-sm-left">At the moment <strong>{{ members_count }} members</strong> will join the event.</p>
-			<p class="text-xs-center text-sm-left">Sign up now and join the event!</p>
-			<p class="text-xs-center text-sm-left"><a class="btn btn-primary btn-lg" href="/join" role="button">Sign up with Youthweb</a></p>
-			<p class="text-xs-center text-sm-left"><a href="#">or sign up with Email</a></p>
+			<h1 class="display-4">Youthweb hat Geburtstag</h1>
+			<p>Am 1. Februar 2004 startete Youthweb und wird 2017 schon 13 Jahre alt. Gratuliere zu diesem Ereignis und hinterlasse deine persönlichen Glückwünsche auf dieser Seite.</p>
+{% if members_count == 0 %}
+			<p class="text-xs-center text-sm-left">Es wurde noch keine Glückwünsche abgegeben. Sei der Erste!</p>
+{% elseif members_count == 1 %}
+			<p class="text-xs-center text-sm-left">Es wurde bereits <strong>ein Glückwünsch</strong> abgegeben.</p>
+{% else %}
+			<p class="text-xs-center text-sm-left">Es wurde bereits <strong>{{ members_count }} Glückwünsche</strong> abgegeben.</p>
+{% endif %}
+			<p class="text-xs-center text-sm-left">Logge dich jetzt einfach ein und sei dabei.</p>
+			<p class="text-xs-center text-sm-left"><a class="btn btn-primary btn-lg" href="/join" role="button">Login mit Youthweb</a></p>
 		</div>
 	</div>
 	<div class="container">
@@ -25,10 +40,15 @@
 			<div class="card-columns">
 {% for member in members %}
 				<div class="card">
-					<img class="card-img-top img-fluid" src="http://placehold.it/150x150" alt="Card image cap" style="height: 100%; width: 100%; display: block;">
+					<img class="card-img-top img-fluid" src="{{ member.getPictureUrl }}" alt="Card image cap" style="height: 100%; width: 100%; display: block;">
 					<div class="card-block">
-						<h4 class="card-title">Card title</h4>
-						<p class="card-text">{{ member.message }}</p>
+						<h4 class="card-title">{{ member.getUsername }}</h4>
+						<p class="card-text">{{ member.getName }} ist seit {{ member.getMemberSince.format('d.m.Y') }} bei Youthweb.</p>
+						<p class="text-xs-center">
+							<i class="fa fa-quote-left" aria-hidden="true"></i><br />
+							{{ member.getDescriptionMotto }}
+						</p>
+						<p class="text-xs-center"><a href="#" class="btn btn-primary">Zur MyPage</a></p>
 					</div>
 				</div>
 {% endfor %}
@@ -43,19 +63,19 @@
 				<p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
 			</div>
 			<div class="col-md-4">
-				<h2>Privacy</h2>
-				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-				<p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+				<h2>Datenschutz</h2>
+				<p>Wenn du dich einloggst, verwendet diese Seite Cookies, um dich wiederzuerkennen. Beim Login werden außerdem User-ID, Username, Vor- und Nachname, Registrierungszeitpunkt und Lebensmotto gespeichert und angezeigt.</p>
+				<p>Diese Daten werden nur zur Anzeige auf dieser Webseite verwendet. Sie werden nicht weitergegeben und werden mit dem Abschalten dieser Webseite vollständig gelöscht.</p>
 			</div>
 			<div class="col-md-4">
-				<h2>Source</h2>
-				<p>This page is open source and licensed unter GPL3. You can use this page for your own event.</p>
-				<p><a class="btn btn-secondary" href="https://github.com/Art4/youthweb-event" role="button">View on github &raquo;</a></p>
+				<h2>Open Source</h2>
+				<p>Diese Seite besteht vollständig aus Open Source Software. Der Code für diese Webseite ist lizensiert unter GPL3. Du kannst den Quellcode dieser Webseite verwenden, um dein eigenes Youthweb-Event zu erstellen.</p>
+				<p><a class="btn btn-secondary" href="https://github.com/Art4/youthweb-birthday" role="button"><i class="fa fa-github" aria-hidden="true"></i> Github &raquo;</a></p>
 			</div>
 		</div>
 		<hr>
 		<footer>
-			<p>License GPL3</p>
+			<p>License <a href="https://github.com/Art4/youthweb-birthday/blob/master/LICENSE">GPL3</a> | <a href="https://wlabs.de/kontakt">Kontakt</a></p>
 		</footer>
 	</div>
 {% endblock %}

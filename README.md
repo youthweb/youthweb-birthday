@@ -1,6 +1,6 @@
-# youthweb-event
+# youthweb-birthday
 
-A boilerplate for a Youthweb event website.
+A simple website for the 13th birthday of Youthweb.
 
 Build with Slim, Twig and Bootstrap.
 
@@ -49,8 +49,8 @@ Clone the repository or download and unzip the code into a folder. Run inside th
 ```
 php composer.phar install
 npm install
-npm run-script grunt
-php cli doctrine:migrations:status
+npm run-script deploy
+php cli doctrine:migrations:migrate
 ```
 
 This installs all dependencies and creates the `style.css`.

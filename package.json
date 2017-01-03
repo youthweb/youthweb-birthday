@@ -1,13 +1,15 @@
 {
-  "name": "youthweb-event",
+  "name": "youthweb-birthday",
   "version": "0.1.0",
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.5",
+    "font-awesome": "^4.7.0",
     "grunt": "^1.0.0",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-concat": "^1.0.0"
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0"
   },
   "scripts": {
-    "grunt": "grunt default"
+    "deploy": "grunt default"
   }
 }

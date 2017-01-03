@@ -23,46 +23,28 @@ class Controller
 
 	public function getIndex(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
+		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
+		list($client, $request, $response) = $this->createClient($namespace, $request, $response);
+
+		$current_user_data = null;
+
+		$cachepool = $this->container['cachepool'];
+
+		$item = $cachepool->getItem($namespace . '.userdata');
+
+		if ( $item->isHit() )
+		{
+			$current_user_data = $item->get();
+		}
+
 		$em = $this->container['em'];
 
 		$members = $em->getRepository(Model\MemberModel::class)->findAll();
 
 		$this->container->view->render($response, 'index.twig', [
 			'members_count' => count($members),
-			'members' => [
-				[
-					'message' => 'Lorem ipsum dolor sit amet, eu sit eius justo adipiscing, cum eros tempor epicurei ex. Ea tota perfecto sit. Illum epicuri eloquentiam ad vim, dignissim cotidieque ea sit, ut eam everti vivendum principes. Ut eius velit ignota usu, agam diceret consectetuer pro cu. An sit mollis mentitum consetetur, has sint liber officiis te. Eam no decore appetere democritum.',
-				],
-				[
-					'message' => 'Ex has nibh illud. Nobis doctus qui et. Ius nostro salutatus honestatis at, sit ignota verterem voluptatum cu. Usu impetus mediocrem ex, pro sale admodum ad.
-
-At mea nulla nullam timeam, cu deserunt vulputate vim. Per ut affert accumsan perfecto. Cibo mutat periculis ne qui, cu sea dico nonumes detraxit. Mel id putant moderatius, congue molestie an per. Te eam latine quaestio, at qui probo efficiantur, comprehensam vituperatoribus in eam.',
-				],
-				[
-					'message' => 'Lorem ipsum dolor sit amet, eu sit eius justo adipiscing, cum eros tempor epicurei ex. Ea tota perfecto sit. Illum epicuri eloquentiam ad vim, dignissim cotidieque ea sit, ut eam everti vivendum principes. Ut eius velit ignota usu, agam diceret consectetuer pro cu. An sit mollis mentitum consetetur, has sint liber officiis te. Eam no decore appetere democritum.',
-				],
-				[
-					'message' => 'Ex has nibh illud. Nobis doctus qui et. Ius nostro salutatus honestatis at, sit ignota verterem voluptatum cu. Usu impetus mediocrem ex, pro sale admodum ad.
-
-At mea nulla nullam timeam, cu deserunt vulputate vim. Per ut affert accumsan perfecto. Cibo mutat periculis ne qui, cu sea dico nonumes detraxit. Mel id putant moderatius, congue molestie an per. Te eam latine quaestio, at qui probo efficiantur, comprehensam vituperatoribus in eam.',
-				],
-				[
-					'message' => 'Ex has nibh illud. Nobis doctus qui et. Ius nostro salutatus honestatis at, sit ignota verterem voluptatum cu. Usu impetus mediocrem ex, pro sale admodum ad.
-
-At mea nulla nullam timeam, cu deserunt vulputate vim. Per ut affert accumsan perfecto. Cibo mutat periculis ne qui, cu sea dico nonumes detraxit. Mel id putant moderatius, congue molestie an per. Te eam latine quaestio, at qui probo efficiantur, comprehensam vituperatoribus in eam.',
-				],
-				[
-					'message' => 'Aeterno pericula pri in, ad sea voluptaria conclusionemque, ubique epicuri eos eu. In ludus adipisci consetetur nec. Pro vivendum patrioque mediocritatem te, eam ad nullam hendrerit. Eam no consequat percipitur, ne facilis consequuntur vis. Ei nulla facilis incorrupte nec, ex vix veritus prodesset. Per falli contentiones eu, accusam corpora has cu. Quot delectus salutandi ex vel.
-
-Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum voluptatum id, porro dicta vituperatoribus ea nec. Ex per novum tation concludaturque. Est suscipit periculis no. Vidit instructior ex vel, vel ei etiam aperiri.',
-				],
-				[
-					'message' => 'Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum voluptatum id, porro dicta vituperatoribus ea nec. Ex per novum tation concludaturque. Est suscipit periculis no. Vidit instructior ex vel, vel ei etiam aperiri.',
-				],
-				[
-					'message' => 'Lorem ipsum dolor sit amet, eu sit eius justo adipiscing, cum eros tempor epicurei ex. Ea tota perfecto sit. Illum epicuri eloquentiam ad vim, dignissim cotidieque ea sit, ut eam everti vivendum principes. Ut eius velit ignota usu, agam diceret consectetuer pro cu. An sit mollis mentitum consetetur, has sint liber officiis te. Eam no decore appetere democritum.',
-				],
-			],
+			'members' => $members,
+			'current_user_data' => $current_user_data,
 		]);
 
 		return $response;
@@ -70,7 +52,8 @@ Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum 
 
 	public function getJoin(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
-		list($client, $request, $response) = $this->createClient($request, $response);
+		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
+		list($client, $request, $response) = $this->createClient($namespace, $request, $response);
 
 		if ( ! $client->isAuthorized() )
 		{
@@ -118,6 +101,30 @@ Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum 
 			$em->flush();
 		}
 
+		$current_user_data = null;
+
+		$cachepool = $this->container['cachepool'];
+
+		$item = $cachepool->getItem($namespace . '.userdata');
+
+		$item->set([
+			'user_id' => $me->get('data.id'),
+			'username' => $me->get('data.attributes.username'),
+		]);
+
+		$item->expiresAt(new \DateTime('+30 minutes'));
+
+		$cachepool->save($item);
+
+		$response = $response->withHeader('Location', '/');
+
+		return $response;
+	}
+
+	public function getLogout(ServerRequestInterface $request, ResponseInterface $response, $args)
+	{
+		$response = $this->removeCookieToResponse($response, 'accesskey');
+
 		$response = $response->withHeader('Location', '/');
 
 		return $response;
@@ -125,7 +132,8 @@ Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum 
 
 	public function getAuth(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
-		list($client, $request, $response) = $this->createClient($request, $response);
+		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
+		list($client, $request, $response) = $this->createClient($namespace, $request, $response);
 
 		$query = $request->getQueryParams();
 
@@ -154,14 +162,11 @@ Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum 
 	}
 
 	/**
-	 * Create a Youthweb-API client
+	 * Get or create a cache namespace
 	 *
-	 * We can't put this into the container because of the cache_namespace creation
-	 * @see https://github.com/youthweb/php-youthweb-api/issues/15
-	 *
-	 * @return Youthweb\Api\Client
+	 * @return array Array with namespace, request and response
 	 */
-	private function createClient(ServerRequestInterface $request, ResponseInterface $response)
+	private function forgeCacheNamespace(ServerRequestInterface $request, ResponseInterface $response)
 	{
 		$cookie_params = $request->getCookieParams();
 
@@ -176,9 +181,24 @@ Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum 
 			$response = $this->addCookieToResponse($response, 'accesskey', $namespace, new \DateTime('+1 hour'));
 		}
 
+		$namespace = str_replace('-', '', $namespace);
+
+		return [$namespace, $request, $response];
+	}
+
+	/**
+	 * Create a Youthweb-API client
+	 *
+	 * We can't put this into the container because of the cache_namespace creation
+	 * @see https://github.com/youthweb/php-youthweb-api/issues/15
+	 *
+	 * @return Youthweb\Api\Client
+	 */
+	private function createClient($namespace, ServerRequestInterface $request, ResponseInterface $response)
+	{
 		$config = $this->container['settings']['youthweb_client'];
 
-		$config['cache_namespace'] = str_replace('-', '', $namespace) . '.';
+		$config['cache_namespace'] = $namespace . '.';
 		$config['scope'] = ['user:read'];
 
 		$client = new \Youthweb\Api\Client(
@@ -208,6 +228,26 @@ Laudem probatus adipisci et ius. In eos sumo regione adipiscing, pri amet illum 
 		}
 
 		$cookie_value = strval($name) . '=' . urlencode(strval($value)) . $expires_at;
+
+		$response = $response->withAddedHeader('Set-Cookie', $cookie_value);
+
+		return $response;
+	}
+
+	/**
+	 * Removes a cookie
+	 *
+	 * $response = $this->removeCookieToResponse($response, 'name');
+	 */
+	private function removeCookieToResponse(ResponseInterface $response, $name)
+	{
+		$expires = new \DateTime('-10 years');
+
+		$expires->setTimezone(new \DateTimeZone('GMT'));
+
+		$expires_at = '; Expires=' . $expires->format(\DateTime::COOKIE);
+
+		$cookie_value = strval($name) . '=' . $expires_at;
 
 		$response = $response->withAddedHeader('Set-Cookie', $cookie_value);
 

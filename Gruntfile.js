@@ -9,14 +9,24 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
+					'node_modules/font-awesome/css/font-awesome.min.css',
 					'node_modules/bootstrap/dist/css/bootstrap.min.css'
 				],
 				dest: 'public/assets/css/style.css'
 			}
-		}
+		},
+		copy: {
+			main: {
+				expand: true,
+				cwd: 'node_modules/font-awesome/fonts',
+				src: '**',
+				dest: 'public/assets/fonts/',
+			},
+		},
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['concat']);
+	grunt.registerTask('default', ['concat', 'copy:main']);
 };
