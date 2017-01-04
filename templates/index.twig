@@ -2,9 +2,7 @@
 
 {% block title %}Youthweb hat Geburtstag{% endblock %}
 
-{% block head %}
-
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block body %}
 	<nav class="navbar navbar-light bg-faded">
@@ -25,14 +23,24 @@
 			<h1 class="display-4">Youthweb hat Geburtstag</h1>
 			<p>Am 1. Februar 2004 startete Youthweb und wird 2017 schon 13 Jahre alt. Gratuliere zu diesem Ereignis und hinterlasse deine persönlichen Glückwünsche auf dieser Seite.</p>
 {% if members_count == 0 %}
-			<p class="text-xs-center text-sm-left">Es wurde noch keine Glückwünsche abgegeben. Sei der Erste!</p>
+			<p class="text-xs-center text-sm-left">Es wurden noch keine Glückwünsche abgegeben. Sei der Erste!</p>
 {% elseif members_count == 1 %}
 			<p class="text-xs-center text-sm-left">Es wurde bereits <strong>ein Glückwünsch</strong> abgegeben.</p>
 {% else %}
-			<p class="text-xs-center text-sm-left">Es wurde bereits <strong>{{ members_count }} Glückwünsche</strong> abgegeben.</p>
+			<p class="text-xs-center text-sm-left">Es wurden bereits <strong>{{ members_count }} Glückwünsche</strong> abgegeben.</p>
 {% endif %}
+{% if current_user_data %}
+			<form action="/join" method="post">
+				<div class="form-group">
+					<label for="message">Hallo {{ current_user_data.username }}. Hinterlasse einen kurzen Glückwunsch:</label>
+					<textarea class="form-control" id="message" name="message" rows="3" placeholder="&quot;Happy Birthday&quot; wäre ein guter Anfang..."></textarea>
+				</div>
+				<p class="text-xs-center text-sm-left"><button type="submit" class="btn btn-primary btn-lg">Absenden</button></p>
+			</form>
+{% else %}
 			<p class="text-xs-center text-sm-left">Logge dich jetzt einfach ein und sei dabei.</p>
 			<p class="text-xs-center text-sm-left"><a class="btn btn-primary btn-lg" href="/join" role="button">Login mit Youthweb</a></p>
+{% endif %}
 		</div>
 	</div>
 	<div class="container">
@@ -42,29 +50,31 @@
 				<div class="card">
 					<img class="card-img-top img-fluid" src="{{ member.getPictureUrl }}" alt="Card image cap" style="height: 100%; width: 100%; display: block;">
 					<div class="card-block">
-						<h4 class="card-title">{{ member.getUsername }}</h4>
-						<p class="card-text">{{ member.getName }} ist seit {{ member.getMemberSince.format('d.m.Y') }} bei Youthweb.</p>
+						<h4 class="card-title">{{ member.getUsername }} <a href="https://youthweb.net/users/{{ member.getUserId }}" class="btn btn-outline-primary btn-sm">Zur MyPage</a></h4>
+						<p class="card-text text-muted">{{ member.getName }} ist seit dem {{ member.getMemberSince.format('d.m.Y') }} bei Youthweb.</p>
 						<p class="text-xs-center">
 							<i class="fa fa-quote-left" aria-hidden="true"></i><br />
-							{{ member.getDescriptionMotto }}
+							{{ member.getDescriptionMotto|nl2br }}
 						</p>
-						<p class="text-xs-center"><a href="#" class="btn btn-primary">Zur MyPage</a></p>
+						<p class="text-xs-center"></p>
 					</div>
 				</div>
 {% endfor %}
 			</div>
 		</div>
 	</div>
+	<hr>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4">
-				<h2>Organization</h2>
-				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-				<p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+				<h2>Technik</h2>
+				<p>Diese Webseite verwendet die Youthweb-API, um dich einzuloggen. Sie wird dich nicht nach deinem Passwort fragen. Gib nie dein Passwort irgendwo außerhalb von Youthweb ein.</p>
+				<p>Erfahre mehr zur Youthweb-API auf der Developer Plattform von Youthweb.</p>
+				<p><a class="btn btn-secondary" href="http://developer.youthweb.net" role="button"><i class="fa fa-code" aria-hidden="true"></i> Zur Developer Webseite &raquo;</a></p>
 			</div>
 			<div class="col-md-4">
 				<h2>Datenschutz</h2>
-				<p>Wenn du dich einloggst, verwendet diese Seite Cookies, um dich wiederzuerkennen. Beim Login werden außerdem User-ID, Username, Vor- und Nachname, Registrierungszeitpunkt und Lebensmotto gespeichert und angezeigt.</p>
+				<p>Wenn du dich einloggst, verwendet diese Seite ein Cookie, um dich wiederzuerkennen. Beim Login wird nur deine User-ID gespeichert. Wenn du einen Glückwunsch hinterlässt, werden außerdem dein Username, Vor- und Nachname, Registrierungszeitpunkt und dein Glückwunschtext gespeichert und angezeigt.</p>
 				<p>Diese Daten werden nur zur Anzeige auf dieser Webseite verwendet. Sie werden nicht weitergegeben und werden mit dem Abschalten dieser Webseite vollständig gelöscht.</p>
 			</div>
 			<div class="col-md-4">
@@ -75,7 +85,7 @@
 		</div>
 		<hr>
 		<footer>
-			<p>License <a href="https://github.com/Art4/youthweb-birthday/blob/master/LICENSE">GPL3</a> | <a href="https://wlabs.de/kontakt">Kontakt</a></p>
+			<p><i class="fa fa-code" aria-hidden="true"></i> with <i class="fa fa-heart" aria-hidden="true"></i> in Düren <span class="text-muted">|</span> <a href="https://wlabs.de/kontakt">Kontakt</a> <span class="text-muted">|</span> License <a href="https://github.com/Art4/youthweb-birthday/blob/master/LICENSE">GPL3</a></p>
 		</footer>
 	</div>
 {% endblock %}

@@ -64,6 +64,7 @@ return [
 			],
 			'/join' => [
 				'GET' => '\Art4\YouthwebEvent\Controller:getJoin',
+				'POST' => '\Art4\YouthwebEvent\Controller:postJoin',
 			],
 			'/logout' => [
 				'GET' => '\Art4\YouthwebEvent\Controller:getLogout',

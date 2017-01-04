@@ -78,29 +78,94 @@ class Controller
 			throw $e;
 		}
 
+		$cachepool = $this->container['cachepool'];
+
+		$item = $cachepool->getItem($namespace . '.userdata');
+
+		$item->set([
+			'user_id' => $me->get('data.id'),
+			'username' => $me->get('data.attributes.username'),
+		]);
+
+		$item->expiresAt(new \DateTime('+30 minutes'));
+
+		$cachepool->save($item);
+
+		$response = $response->withHeader('Location', '/');
+
+		return $response;
+	}
+
+	public function postJoin(ServerRequestInterface $request, ResponseInterface $response, $args)
+	{
+		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
+		list($client, $request, $response) = $this->createClient($namespace, $request, $response);
+
+		// Check if user is logged in
+		$current_user_data = null;
+
+		$cachepool = $this->container['cachepool'];
+
+		$item = $cachepool->getItem($namespace . '.userdata');
+
+		if ( $item->isHit() )
+		{
+			$current_user_data = $item->get();
+		}
+		else
+		{
+			$response = $response->withHeader('Location', '/join');
+
+			return $response;
+		}
+
+		if ( ! $client->isAuthorized() )
+		{
+			$response = $response->withHeader('Location', $client->getAuthorizationUrl());
+
+			return $response;
+		}
+
+		try
+		{
+			$me = $client->getResource('users')->showMe();
+		}
+		catch (\Exception $e)
+		{
+			// Prüfen, ob ein 401 Error vorliegt
+			// @see https://github.com/youthweb/php-youthweb-api/issues/14
+			if ( strval($e->getCode()) === '401' )
+			{
+				return $this->showUnauthorizedError($request, $response, $args);
+			}
+
+			throw $e;
+		}
+
 		$em = $this->container['em'];
 
 		$member = $em->getRepository(Model\MemberModel::class)->findOneBy([
 			'user_id' => $me->get('data.id')
 		]);
 
+		$body = $request->getParsedBody();
+		$message = (isset($body['message'])) ? strval($body['message']) : 'Kein Text';
+
 		// Create new member
-		if ($member === null)
-		{
+		//if ($member === null)
+		//{
 			$member = new Model\MemberModel;
 			$member->setUserId($me->get('data.id'));
 			$member->setUsername($me->get('data.attributes.username'));
 			$member->setName($me->get('data.attributes.first_name') . ' ' . $me->get('data.attributes.last_name'));
 			$member->setMemberSince(new \DateTime($me->get('data.attributes.created_at')));
 			$member->setPictureUrl($me->get('data.attributes.picture_url'));
-			$member->setDescriptionMotto($me->get('data.attributes.description_motto'));
+			$member->setDescriptionMotto($message);
 			$member->setCreatedAt(time());
 
 			$em->persist($member);
 			$em->flush();
-		}
-
-		$current_user_data = null;
+		//}
 
 		$cachepool = $this->container['cachepool'];
 
