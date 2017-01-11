@@ -20,19 +20,21 @@
 	</nav>
 	<div class="jumbotron">
 		<div class="container">
-			<h1 class="display-4">Youthweb hat Geburtstag</h1>
-			<p>Am 1. Februar 2004 startete Youthweb und wird 2017 schon 13 Jahre alt. Gratuliere zu diesem Ereignis und hinterlasse deine persönlichen Glückwünsche auf dieser Seite.</p>
+			<h1 class="display-4 text-xs-center text-sm-left">Youthweb hat Geburtstag</h1>
+			<p class="text-xs-center text-sm-left">Am 1. Februar 2004 startete Youthweb und wird 2017 schon 13 Jahre alt. Gratuliere zu diesem Ereignis und hinterlasse deine persönlichen Glückwünsche auf dieser Seite.</p>
+			<p class="text-xs-center text-sm-left">
 {% if members_count == 0 %}
-			<p class="text-xs-center text-sm-left">Es wurden noch keine Glückwünsche abgegeben. Sei der Erste!</p>
+			Es wurden noch keine Glückwünsche abgegeben. Sei der Erste!
 {% elseif members_count == 1 %}
-			<p class="text-xs-center text-sm-left">Es wurde bereits <strong>ein Glückwünsch</strong> abgegeben.</p>
+			Es wurde bereits <strong>ein Glückwünsch</strong> abgegeben.
 {% else %}
-			<p class="text-xs-center text-sm-left">Es wurden bereits <strong>{{ members_count }} Glückwünsche</strong> abgegeben.</p>
+			Es wurden bereits <strong>{{ members_count }} Glückwünsche</strong> abgegeben.
 {% endif %}
+			</p>
 {% if current_user_data %}
 			<form action="/join" method="post">
 				<div class="form-group">
-					<label for="message">Hallo {{ current_user_data.username }}. Hinterlasse einen kurzen Glückwunsch:</label>
+					<label for="message" class="text-xs-center text-sm-left">Hallo {{ current_user_data.username }}. Hinterlasse einen kurzen Glückwunsch:</label>
 					<textarea class="form-control" id="message" name="message" rows="3" placeholder="&quot;Happy Birthday&quot; wäre ein guter Anfang..."></textarea>
 				</div>
 				<p class="text-xs-center text-sm-left"><button type="submit" class="btn btn-primary btn-lg">Absenden</button></p>
