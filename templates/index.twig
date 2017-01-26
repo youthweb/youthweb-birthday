@@ -5,8 +5,8 @@
 {% block head %}{% endblock %}
 
 {% block body %}
-	<nav class="navbar navbar-light bg-faded d-flex">
-		<span class="p-2 ml-auto">
+	<nav class="navbar navbar-light bg-faded">
+		<span class="navbar-brand float-xs-right">
 {% if current_user_data %}
 			Hallo {{ current_user_data.username }} <a class="btn btn-outline-primary" href="/logout" role="button">Logout</a>
 {% else %}
