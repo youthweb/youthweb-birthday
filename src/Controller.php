@@ -157,11 +157,19 @@ class Controller
 		}
 
 		$em = $this->container['em'];
-/*
-		$member = $em->getRepository(Model\MemberModel::class)->findOneBy([
+
+		$entries = $em->getRepository(Model\MemberModel::class)->findBy([
 			'user_id' => $me->get('data.id')
 		]);
-*/
+
+		// Spamschutz
+		if ( count($entries) >= 5 )
+		{
+			$this->container->view->render($response, 'errors/spam_protection.twig', []);
+
+			return $response;
+		}
+
 		$body = $request->getParsedBody();
 		$message = (isset($body['message'])) ? strval($body['message']) : 'Kein Text';
 
