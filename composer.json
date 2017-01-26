@@ -26,5 +26,8 @@
         "psr-4": {
             "Art4\\YouthwebEvent\\": "src"
         }
+    },
+    "scripts": {
+        "start": "php -S localhost:8080 -t public"
     }
 }
