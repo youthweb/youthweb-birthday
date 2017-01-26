@@ -43,6 +43,9 @@ return [
 			'client_secret' => '{client_secret}',
 			'redirect_url'  => 'http://localhost:8080/auth',
 		],
+		'site' => [
+			'max_entries' => 5,
+		],
 		'views' => [
 			'twig' => [
 				'template_path' => ROOTPATH.'templates'.DS,

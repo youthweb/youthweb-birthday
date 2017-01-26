@@ -163,7 +163,9 @@ class Controller
 		]);
 
 		// Spamschutz
-		if ( count($entries) >= 5 )
+		$max_entries = $this->container['settings']['site']['max_entries'];
+
+		if ( count($entries) >= $max_entries )
 		{
 			$this->container->view->render($response, 'errors/spam_protection.twig', []);
 
