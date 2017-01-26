@@ -7,7 +7,7 @@
 {% block body %}
 	<nav class="navbar navbar-light bg-faded">
 		<span class="navbar-brand float-xs-right">
-{% if current_user_data %}
+{% if current_user_data.is_logged_in %}
 			Hallo {{ current_user_data.username }} <a class="btn btn-outline-primary" href="/logout" role="button">Logout</a>
 {% else %}
 			<a class="btn btn-primary" href="/join" role="button">Login mit Youthweb</a>
@@ -27,7 +27,7 @@
 			Es wurden bereits <strong>{{ members_count }} Glückwünsche</strong> abgegeben.
 {% endif %}
 			</p>
-{% if current_user_data %}
+{% if current_user_data.is_logged_in %}
 			<form action="/join" method="post">
 				<div class="form-group">
 					<label for="message" class="text-xs-center text-sm-left">Hallo {{ current_user_data.username }}. Hinterlasse einen kurzen Glückwunsch:</label>

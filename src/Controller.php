@@ -26,16 +26,7 @@ class Controller
 		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
 		list($client, $request, $response) = $this->createClient($namespace, $request, $response);
 
-		$current_user_data = null;
-
-		$cachepool = $this->container['cachepool'];
-
-		$item = $cachepool->getItem($namespace . '.userdata');
-
-		if ( $item->isHit() )
-		{
-			$current_user_data = $item->get();
-		}
+		$current_user_data = $this->getUserdata($namespace);
 
 		$em = $this->container['em'];
 
@@ -101,18 +92,9 @@ class Controller
 		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
 		list($client, $request, $response) = $this->createClient($namespace, $request, $response);
 
-		// Check if user is logged in
-		$current_user_data = null;
+		$current_user_data = $this->getUserdata($namespace);
 
-		$cachepool = $this->container['cachepool'];
-
-		$item = $cachepool->getItem($namespace . '.userdata');
-
-		if ( $item->isHit() )
-		{
-			$current_user_data = $item->get();
-		}
-		else
+		if ( $current_user_data['is_logged_in'] === false )
 		{
 			$response = $response->withHeader('Location', '/join');
 
@@ -143,42 +125,26 @@ class Controller
 		}
 
 		$em = $this->container['em'];
-
+/*
 		$member = $em->getRepository(Model\MemberModel::class)->findOneBy([
 			'user_id' => $me->get('data.id')
 		]);
-
+*/
 		$body = $request->getParsedBody();
 		$message = (isset($body['message'])) ? strval($body['message']) : 'Kein Text';
 
-		// Create new member
-		//if ($member === null)
-		//{
-			$member = new Model\MemberModel;
-			$member->setUserId($me->get('data.id'));
-			$member->setUsername($me->get('data.attributes.username'));
-			$member->setName($me->get('data.attributes.first_name') . ' ' . $me->get('data.attributes.last_name'));
-			$member->setMemberSince(new \DateTime($me->get('data.attributes.created_at')));
-			$member->setPictureUrl($me->get('data.attributes.picture_url'));
-			$member->setDescriptionMotto($message);
-			$member->setCreatedAt(time());
+		// Create new entry
+		$member = new Model\MemberModel;
+		$member->setUserId($me->get('data.id'));
+		$member->setUsername($me->get('data.attributes.username'));
+		$member->setName($me->get('data.attributes.first_name') . ' ' . $me->get('data.attributes.last_name'));
+		$member->setMemberSince(new \DateTime($me->get('data.attributes.created_at')));
+		$member->setPictureUrl($me->get('data.attributes.picture_url'));
+		$member->setDescriptionMotto($message);
+		$member->setCreatedAt(time());
 
-			$em->persist($member);
-			$em->flush();
-		//}
-
-		$cachepool = $this->container['cachepool'];
-
-		$item = $cachepool->getItem($namespace . '.userdata');
-
-		$item->set([
-			'user_id' => $me->get('data.id'),
-			'username' => $me->get('data.attributes.username'),
-		]);
-
-		$item->expiresAt(new \DateTime('+30 minutes'));
-
-		$cachepool->save($item);
+		$em->persist($member);
+		$em->flush();
 
 		$response = $response->withHeader('Location', '/');
 
@@ -316,5 +282,42 @@ class Controller
 		$response = $response->withAddedHeader('Set-Cookie', $cookie_value);
 
 		return $response;
+	}
+
+	/**
+	 * Get Userdata
+	 *
+	 * return array
+	 */
+	private function getUserdata($namespace)
+	{
+		// Check if user is logged in
+		$current_user_data = [
+			'is_logged_in' => false,
+			'user_id' => 0,
+			'username' => '',
+		];
+
+		$cachepool = $this->container['cachepool'];
+
+		$item = $cachepool->getItem($namespace . '.userdata');
+
+		if ( $item->isHit() )
+		{
+			$cached_user_data = $item->get();
+
+			// User is logged in
+			$current_user_data['is_logged_in'] = true;
+
+			foreach ($current_user_data as $key => $value)
+			{
+				if ( is_array($cached_user_data) and array_key_exists($key, $cached_user_data) )
+				{
+					$current_user_data[$key] = $cached_user_data[$key];
+				}
+			}
+		}
+
+		return $current_user_data;
 	}
 }
