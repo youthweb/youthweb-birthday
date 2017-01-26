@@ -44,7 +44,12 @@ return [
 			'redirect_url'  => 'http://localhost:8080/auth',
 		],
 		'site' => [
+			// how much entries can be created by an user
 			'max_entries' => 5,
+			// Ids of Admins
+			'admin_ids' => [
+				// 1, 234, ...
+			],
 		],
 		'views' => [
 			'twig' => [

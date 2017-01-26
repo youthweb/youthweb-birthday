@@ -383,6 +383,7 @@ class Controller
 		// Check if user is logged in
 		$current_user_data = [
 			'is_logged_in' => false,
+			'is_admin' => false,
 			'user_id' => 0,
 			'username' => '',
 		];
@@ -404,6 +405,14 @@ class Controller
 				{
 					$current_user_data[$key] = $cached_user_data[$key];
 				}
+			}
+
+			// Check admin state
+			$admin_ids = $this->container['settings']['site']['admin_ids'];
+
+			if ( in_array($current_user_data['user_id'], $admin_ids) )
+			{
+				$current_user_data['is_admin'] = true;
 			}
 		}
 
