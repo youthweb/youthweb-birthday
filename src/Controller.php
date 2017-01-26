@@ -16,11 +16,25 @@ class Controller
 	 */
 	private $container;
 
+	/**
+	 * Constructor
+	 *
+	 * @param Interop\Container\ContainerInterface $container
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->container = $container;
 	}
 
+	/**
+	 * Zeigt die Startseite an
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
 	public function getIndex(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
 		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
@@ -41,6 +55,15 @@ class Controller
 		return $response;
 	}
 
+	/**
+	 * Startet den Login
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
 	public function getJoin(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
 		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
@@ -87,6 +110,15 @@ class Controller
 		return $response;
 	}
 
+	/**
+	 * Speichert einen neuen Glückwunsch
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
 	public function postJoin(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
 		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
@@ -151,6 +183,15 @@ class Controller
 		return $response;
 	}
 
+	/**
+	 * Loggt den User aus
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
 	public function getLogout(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
 		$response = $this->removeCookieToResponse($response, 'accesskey');
@@ -160,6 +201,15 @@ class Controller
 		return $response;
 	}
 
+	/**
+	 * Callback für OAuth2
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
 	public function getAuth(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
 		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
@@ -184,6 +234,15 @@ class Controller
 		return $response;
 	}
 
+	/**
+	 * Zeigt einen Fehler bei der Authorization an
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
 	private function showUnauthorizedError(ServerRequestInterface $request, ResponseInterface $response, $args)
 	{
 		$this->container->view->render($response, 'errors/unauthorized.twig', []);
@@ -193,6 +252,10 @@ class Controller
 
 	/**
 	 * Get or create a cache namespace
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
 	 *
 	 * @return array Array with namespace, request and response
 	 */
@@ -222,6 +285,10 @@ class Controller
 	 * We can't put this into the container because of the cache_namespace creation
 	 * @see https://github.com/youthweb/php-youthweb-api/issues/15
 	 *
+	 * @param string $namespace
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 *
 	 * @return Youthweb\Api\Client
 	 */
 	private function createClient($namespace, ServerRequestInterface $request, ResponseInterface $response)
@@ -243,6 +310,11 @@ class Controller
 
 	/**
 	 * Add a cookie to the response
+	 *
+	 * @param ResponseInterface $response
+	 * @param string $name
+	 * @param string $value
+	 * @param DateTimeInterface $expires
 	 *
 	 * $response = $this->addCookieToResponse($response, 'name', 'value', new \DateTime('+1 hour'));
 	 */
@@ -268,6 +340,11 @@ class Controller
 	 * Removes a cookie
 	 *
 	 * $response = $this->removeCookieToResponse($response, 'name');
+	 *
+	 * @param ResponseInterface $response
+	 * @param string $name
+	 *
+	 * @param ResponseInterface $response
 	 */
 	private function removeCookieToResponse(ResponseInterface $response, $name)
 	{
@@ -287,7 +364,9 @@ class Controller
 	/**
 	 * Get Userdata
 	 *
-	 * return array
+	 * @param string $namespace
+	 *
+	 * @return array
 	 */
 	private function getUserdata($namespace)
 	{
