@@ -8,7 +8,7 @@
 	<nav class="navbar navbar-light bg-faded">
 		<span class="navbar-brand float-xs-right">
 {% if current_user_data.is_logged_in %}
-			Hallo {{ current_user_data.username }}{% if current_user_data.is_admin %} (Admin){% endif %} <a class="btn btn-outline-primary" href="/logout" role="button">Logout</a>
+			Hallo {{ current_user_data.username }}{% if current_user_data.is_admin %} <span class="text-muted">(Admin)</span>{% endif %} <a class="btn btn-outline-primary" href="/logout" role="button">Logout</a>
 {% else %}
 			<a class="btn btn-primary" href="/join" role="button">Login mit Youthweb</a>
 {% endif %}
@@ -48,7 +48,21 @@
 				<div class="card">
 					<img class="card-img-top img-fluid" src="{{ member.getPictureUrl }}" alt="Card image cap" style="height: 100%; width: 100%; display: block;">
 					<div class="card-block">
-						<h4 class="card-title">{{ member.getUsername }} <a href="https://youthweb.net/users/{{ member.getUserId }}" class="btn btn-outline-primary btn-sm">Zur MyPage</a></h4>
+						<h4 class="card-title">{{ member.getUsername }}
+							<div class="btn-group">
+								<a href="https://youthweb.net/users/{{ member.getUserId }}" class="btn btn-outline-primary btn-sm">Zur MyPage</a>
+{% if current_user_data.is_admin %}
+								<button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Diesen Beitrag</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Alle Beiträge dieses Users</a>
+								</div>
+{% endif %}
+							</div>
+						</h4>
 						<p class="card-text text-muted">{{ member.getName }} ist seit dem {{ member.getMemberSince.format('d.m.Y') }} bei Youthweb.</p>
 						<p class="text-xs-center">
 							<i class="fa fa-quote-left" aria-hidden="true"></i><br />

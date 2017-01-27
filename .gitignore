@@ -6,4 +6,5 @@ config/production/
 node_modules/
 public/assets/css/
 public/assets/fonts/
+public/assets/js/
 vendor/

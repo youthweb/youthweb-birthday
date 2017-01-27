@@ -7,12 +7,20 @@ module.exports = function(grunt) {
 				separator: ';',
 				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
-			dist: {
+			css: {
 				src: [
 					'node_modules/font-awesome/css/font-awesome.min.css',
 					'node_modules/bootstrap/dist/css/bootstrap.min.css'
 				],
 				dest: 'public/assets/css/style.css'
+			},
+			js: {
+				src: [
+					'node_modules/jquery/dist/jquery.slim.min.js',
+					'node_modules/tether/dist/js/tether.min.js',
+					'node_modules/bootstrap/dist/js/bootstrap.min.js'
+				],
+				dest: 'public/assets/js/script.js'
 			}
 		},
 		copy: {
@@ -28,5 +36,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['concat', 'copy:main']);
+	grunt.registerTask('default', ['concat:css', 'concat:js', 'copy:main']);
 };
