@@ -56,10 +56,11 @@
 								<span class="sr-only">Toggle Dropdown</span>
 								</button>
 								<div class="dropdown-menu">
-									<a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Diesen Beitrag</a>
+									<button class="dropdown-item" type="submit" form="delete_post_{{ member.getId }}" /><i class="fa fa-trash" aria-hidden="true"></i> Diesen Beitrag</button>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Alle Beiträge dieses Users</a>
 								</div>
+								<form id="delete_post_{{ member.getId }}" action="/delete_post/{{ member.getId }}" method="post"></form>
 {% endif %}
 							</div>
 						</h4>

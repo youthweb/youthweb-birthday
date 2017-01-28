@@ -194,6 +194,47 @@ class Controller
 	}
 
 	/**
+	 * Löscht einen Post anhand der ID
+	 *
+	 * @param ServerRequestInterface $request
+	 * @param ResponseInterface $response
+	 * @param array $args
+	 *
+	 * @return ResponseInterface $response
+	 */
+	public function deletePost(ServerRequestInterface $request, ResponseInterface $response, $args)
+	{
+		list($namespace, $request, $response) = $this->forgeCacheNamespace($request, $response);
+
+		$current_user_data = $this->getUserdata($namespace);
+
+		if ( $current_user_data['is_logged_in'] === false )
+		{
+			$response = $response->withHeader('Location', '/');
+
+			return $response;
+		}
+
+		$em = $this->container['em'];
+
+		$entry = $em->getRepository(Model\MemberModel::class)->find($args['id']);
+
+		if ( $entry === null )
+		{
+			$response = $response->withHeader('Location', '/');
+
+			return $response;
+		}
+
+		$em->remove($entry);
+		$em->flush();
+
+		$response = $response->withHeader('Location', '/');
+
+		return $response;
+	}
+
+	/**
 	 * Loggt den User aus
 	 *
 	 * @param ServerRequestInterface $request

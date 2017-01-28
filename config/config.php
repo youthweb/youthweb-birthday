@@ -74,6 +74,12 @@ return [
 				'GET' => '\Art4\YouthwebEvent\Controller:getJoin',
 				'POST' => '\Art4\YouthwebEvent\Controller:postJoin',
 			],
+			'/delete_post/{id:[0-9]+}' => [
+				'POST' => '\Art4\YouthwebEvent\Controller:deletePost',
+			],
+			'/delete_user/{id:[0-9]+}' => [
+				'POST' => '\Art4\YouthwebEvent\Controller:deleteUser',
+			],
 			'/logout' => [
 				'GET' => '\Art4\YouthwebEvent\Controller:getLogout',
 			],
