@@ -58,9 +58,10 @@
 								<div class="dropdown-menu">
 									<button class="dropdown-item" type="submit" form="delete_post_{{ member.getId }}" /><i class="fa fa-trash" aria-hidden="true"></i> Diesen Beitrag</button>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Alle Beiträge dieses Users</a>
+									<button class="dropdown-item" type="submit" form="delete_user_{{ member.getId }}_{{ member.getUserId }}" /><i class="fa fa-trash" aria-hidden="true"></i> Alle Beiträge dieses Users</button>
 								</div>
 								<form id="delete_post_{{ member.getId }}" action="/delete_post/{{ member.getId }}" method="post"></form>
+								<form id="delete_user_{{ member.getId }}_{{ member.getUserId }}" action="/delete_user/{{ member.getUserId }}" method="post"></form>
 {% endif %}
 							</div>
 						</h4>
